@@ -31,7 +31,7 @@ export default function ButtonAppBar() {
 
   return (
     <div className={classes.root}>
-      <AppBar position="static">
+      <AppBar position="static" color="default" className={classes.appBar}>
         <Toolbar>
           <Typography variant="h6" className={classes.title}>
             (app logo)....   App Name

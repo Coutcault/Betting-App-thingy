@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useHistory, Redirect } from 'react-router-dom';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -12,6 +13,7 @@ import Grid from '@material-ui/core/Grid';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
+import Register from './Register';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -46,6 +48,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 export default function SignInSide() {
   const classes = useStyles();
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  // const [output, setOutput] = useState([]);
+  const history = useHistory();
+  
+
   return (
     <Grid container component="main" className={classes.root}>
       <CssBaseline />
@@ -68,6 +76,7 @@ export default function SignInSide() {
               name="username"
               autoComplete="username"
               autoFocus
+              onChange={e => setUsername(e.target.value)}
             />
             <TextField
               variant="outlined"
@@ -79,19 +88,62 @@ export default function SignInSide() {
               type="password"
               id="password"
               autoComplete="current-password"
+              onChange={e => setPassword(e.target.value)}
             />
+            <div id="ourOutput"></div>
             <Button
               type="submit"
               fullWidth
               variant="contained"
               color="primary"
               className={classes.submit}
+              onClick={
+                e => {
+                    e.preventDefault();
+                    const getData = async () => {
+                      const data = {
+                        username: username,
+                        password: password
+                      }
+                      const configs= {
+                        method: "POST",
+                        headers: {'Content-Type': 'application/json'},
+                        mode: "cors",
+                        body: JSON.stringify(data)
+                      }
+                      const response = await fetch("http://localhost:5000/login", configs);
+                      const output = await response.json();
+                      if (output === false){
+                        console.log(false)
+                        const outPutDiv = document.getElementById("ourOutput");
+                          outPutDiv.innerHTML = "<p>* Please enter correct username and password</p>";
+                      }if (output){
+                        console.log(true)
+                        history.push('/home').catch(err => console.log(err))
+                      }
+                    }
+                    getData();
+                  }
+              }       
             >
               Sign In
             </Button>
+            <Grid container>
+              <Grid item xs>
+                <Link href="#" variant="body2">
+                  Forgot password?
+                </Link>
+              </Grid>
+              <Grid item>
+                <Link href="/signup" variant="body2">
+                  {"Don't have an account? Sign Up"}
+                </Link>
+              </Grid>
+            </Grid>
           </form>
         </div>
       </Grid>
+
     </Grid>
   );
 }

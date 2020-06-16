@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import InputBase from '@material-ui/core/InputBase';
@@ -32,6 +32,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function CustomizedInputBase() {
   const classes = useStyles();
+  const [username, setUsername] = useState("")
 
   return (
     <div style={{textAlign:"center"}}>
@@ -43,15 +44,44 @@ export default function CustomizedInputBase() {
         className={classes.input}
         placeholder="Enter Username"
         // inputProps={{ 'aria-label': 'search google maps' }}
+        onChange={e => setUsername(e.target.value)}
       />
       <IconButton type="submit" className={classes.iconButton} aria-label="search">
-        <SearchIcon />
+        <SearchIcon 
+          onClick={
+          e => {
+            e.preventDefault();
+              const getData = async () => {
+                const data = {
+                  user: username
+                  }
+                  const configs= {
+                    method: "POST",
+                    headers: {'Content-Type': 'application/json'},
+                    mode: "cors",
+                    body: JSON.stringify(data)
+                    }
+                    const response = await fetch("http://localhost:5000/find_user", configs);
+                    const output = await response.json();
+                    if (output === false){
+                      console.log(false)
+                      const outPutDiv = document.getElementById("ourOutput");
+                        outPutDiv.innerHTML = "<p>* That user does not exist. </p>";
+                    }if (output){
+                      console.log(true)
+                    }
+                  }
+                  getData();
+                }
+            }       
+        />
       </IconButton>
       <Divider className={classes.divider} orientation="vertical" />
       <IconButton color="primary" className={classes.iconButton} aria-label="directions">
         <PersonAddIcon />
       </IconButton>
     </Paper>
+    <div id='ourOutput'></div>
     </div>
   );
 }

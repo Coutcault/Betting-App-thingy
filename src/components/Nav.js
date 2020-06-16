@@ -6,6 +6,7 @@ import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import FindFriends from './FindFriends'
+import MakeBet from './MakeBet'
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -89,7 +90,8 @@ export default function VerticalTabs() {
         Public Bets
       </TabPanel>
       <TabPanel value={value} index={3}>
-        Make a Bet
+        Make a Bet <br></br><br></br>
+        <MakeBet />
       </TabPanel>
       <TabPanel value={value} index={4}>
         Active Bets

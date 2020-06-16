@@ -10,10 +10,10 @@ function App() {
   return (
     <div>
     <BrowserRouter>
-      <Route exact path="/Login" component={Login} />
+      <Route exact path="/login" component={Login} />
       {/* <Redirect from='/' to='/Login' /> */}
       <Route exact path="/home" component={HomePage} />
-      <Route exact path="/avail" component={Register} />
+      <Route exact path="/signup" component={Register} />
     </BrowserRouter>
     </div>
   );
