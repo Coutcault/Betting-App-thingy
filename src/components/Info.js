@@ -12,7 +12,7 @@ export default function InfoForm(props) {
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const [email, setEmail] = useState("")
-  const info = [first, last, username, password]
+  const info = [first, last, username, password, email]
 
   return (
     <React.Fragment>
@@ -76,7 +76,7 @@ export default function InfoForm(props) {
           />
         </Grid>
       </Grid>
-      {<Register detail={info} /> }
+      {/* {<Register detail={info} /> } */}
     </React.Fragment>
   );
 }
