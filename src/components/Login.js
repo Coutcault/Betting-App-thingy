@@ -13,7 +13,6 @@ import Grid from '@material-ui/core/Grid';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
-import Register from './Register';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -46,13 +45,13 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(3, 0, 2),
   },
 }));
-export default function SignInSide() {
+export default function Login() {
   const classes = useStyles();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [token, setToken] = useState("");
   // const [output, setOutput] = useState([]);
   const history = useHistory();
-  
 
   return (
     <Grid container component="main" className={classes.root}>
@@ -111,15 +110,17 @@ export default function SignInSide() {
                         mode: "cors",
                         body: JSON.stringify(data)
                       }
-                      const response = await fetch("http://localhost:5000/login", configs);
+                      const response = await fetch("http://localhost:5000/api/login", configs);
                       const output = await response.json();
-                      if (output === false){
+                      if (output.token === ""){
                         console.log(false)
                         const outPutDiv = document.getElementById("ourOutput");
-                          outPutDiv.innerHTML = "<p>* Please enter correct username and password</p>";
-                      }if (output){
-                        console.log(true)
-                        history.push('/home').catch(err => console.log(err))
+                        outPutDiv.innerHTML = "<p>* Please enter correct username and password</p>";
+                      }else if (output){
+                        setToken(output.token);
+                        sessionStorage.setItem("token", output.token);
+                        console.log(true);
+                        history.push('/home')
                       }
                     }
                     getData();

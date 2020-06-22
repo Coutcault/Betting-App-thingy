@@ -159,7 +159,7 @@ export default function SignUp() {
             color="primary"
             className={classes.submit}
             onClick={
-                e => {
+                e => {e.preventDefault();
                     if (password !== affirm){
                         const outPutDiv = document.getElementById("ourOutput");
                         outPutDiv.innerHTML = "<p>* Passwords must match.</p>";
@@ -181,8 +181,8 @@ export default function SignUp() {
                         }
                         const response = await fetch("http://localhost:5000/add_user", configs);
                         const output = await response.json();
-                        if (output === true){
-                            console.log(true)
+                        if (output.success === true){
+                            console.log(true, output)
                             history.push('/new').catch(err => console.log(err))
                         } else {
                             const outPutDiv = document.getElementById("ourOutput2");

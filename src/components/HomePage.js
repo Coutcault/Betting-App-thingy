@@ -1,5 +1,5 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useHistory, Redirect, Link } from 'react-router-dom';
 import { fade, makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -28,6 +28,13 @@ const useStyles = makeStyles((theme) => ({
 
 export default function ButtonAppBar() {
   const classes = useStyles();
+  const history = useHistory();
+  const useStateWithSessionStorage = (key) => {
+    const [data, setData] = useState(sessionStorage.getItem('token') || "");
+    return [data, setData]
+    }
+  const [data, setData] = useStateWithSessionStorage("token")
+
 
   return (
     <div className={classes.root}>
@@ -52,7 +59,31 @@ export default function ButtonAppBar() {
           </IconButton>
           {/* <p>Notifications</p> */}
         </MenuItem>
-          <Button color="inherit">Logout</Button>
+          <Button 
+            color="inherit"
+            onClick={
+              e => {
+                e.preventDefault();
+                sessionStorage.setItem("token", "")
+                const getData = async () => {
+                  const reset = {
+                    data: data
+                  }
+                  const configs= {
+                    method: "POST",
+                    headers: {'Content-Type': 'application/json'},
+                    mode: "cors",
+                    body: JSON.stringify(reset)
+                  }                    
+                  const response = await fetch("http://localhost:5000/api/logout", configs);
+                  const output = await response.json();
+                  console.log(output);
+                  history.push('/login')
+                }
+                getData()
+              } 
+            }
+          >Logout</Button>
         </Toolbar>
       </AppBar>
       <Nav />

@@ -59,14 +59,12 @@ const useStyles = makeStyles((theme) => ({
     return (
         <div>
             <CssBaseline />
-            <main className={classes.layout}>
-                <Paper className={classes.paper}>
                     <Typography variant="h5" gutterBottom>
                         Thank you, your account has successfully been created.
                     </Typography><br></br><br></br>
                     <Link href="/login" variant="body2">
                     {"Please click here to login."}
                     </Link>
-                </Paper>
-            </main>
         </div>
+      )
+    }
