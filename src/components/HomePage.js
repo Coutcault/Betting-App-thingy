@@ -41,7 +41,7 @@ export default function ButtonAppBar() {
       <AppBar position="static" color="default" className={classes.appBar}>
         <Toolbar>
           <Typography variant="h6" className={classes.title}>
-            (app logo)....   App Name
+            Bettor Friends
           </Typography>
           <MenuItem>
           <IconButton aria-label="show 4 new mails" color="inherit">

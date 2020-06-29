@@ -6,7 +6,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-import { Button, ButtonToolbar, ButtonGroup, InputGroup, Modal } from 'react-bootstrap';
+import { Button, ButtonToolbar, ButtonGroup, InputGroup, Modal, Form } from 'react-bootstrap';
 import RemoveIcon from '@material-ui/icons/Remove';
 import AddIcon from '@material-ui/icons/Add';
 
@@ -29,19 +29,26 @@ export default function Ticket() {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   const [betUser, setBetUser] = useState(""); //User to make bet with
-  const [how, setHow] = useState("Private");
-  const [type, setType] = useState("");
+  const [priv, setPriv] = useState("Private");
+  const [typeOfBet, setTypeOfBet] = useState("");
   const [line, setLine] = useState(Number);
   const [odds, setOdds] = useState(Number);
-  const [betDuration, setBetDuration] = useState(Number);
   const [betDate, setBetDate] = useState(Date);
-  const [description, setDescription] = useState("");
-  const [amountRisk, setAmountRisk] = useState(Number);
+  const [betDescription, setBetDescription] = useState("");
+  const [amountAtRisk, setAmountAtRisk] = useState(Number);
   // const [lineSwith, setLineSwitch] = useState("off");
   // const [oddsSwith, setOddsSwitch] = useState("");
   const [userFriends, setUserFriends] = useState([])
-  const ticket = [how, betUser, type, line, odds, betDuration, betDate, description, amountRisk]
-
+  function getWinnings(){
+    if (odds < 0){
+      return Math.round((amountAtRisk / Math.abs(odds))*100)
+    }else {
+      return Math.round(amountAtRisk * (odds/100))
+    }
+  }
+  const amountWin = getWinnings()
+  const ticket = [priv, betUser, typeOfBet, line, odds, betDate, betDescription, amountAtRisk]
+  
   const useStateWithSessionStorage = (key) => {
     const [data, setData] = useState(sessionStorage.getItem('token') || "");
     // console.log(data)
@@ -63,11 +70,12 @@ export default function Ticket() {
             }
             const response = await fetch("http://localhost:5000/get_friends", configs);
             const output = await response.json();
+            // console.log(output)
             setUserFriends(output)
             // console.log(userFriends)
           }
        getFriends();
-      }
+      }, []
     )
   
   //   useEffect(() => {
@@ -82,7 +90,7 @@ export default function Ticket() {
     // Public / Private
     <div className='container' >
       <div>
-        <p onChange={e => setHow(e.target.name)}>
+        <p onChange={e => setPriv(e.target.name)}>
           <label>
             <input name="Public" type="radio" class="with-gap" disabled />
             <span>Public</span>
@@ -112,8 +120,6 @@ export default function Ticket() {
                   return (<MenuItem value={friend}>{friend}</MenuItem>);
                 })
               }
-              {/* <MenuItem value={20}>Twenty</MenuItem>
-              <MenuItem value={30}>Thirty</MenuItem> */}
             </Select>
         </FormControl>
         <br></br>
@@ -126,8 +132,8 @@ export default function Ticket() {
             <Select
               labelId="demo-simple-select-outlined-label"
               id="demo-simple-select-outlined"
-              value={type}
-              onChange={e => setType(e.target.value)}
+              value={typeOfBet}
+              onChange={e => setTypeOfBet(e.target.value)}
               label="Type"
             >
               <MenuItem value={"Money Line"}>Money Line</MenuItem>
@@ -186,19 +192,12 @@ export default function Ticket() {
 
     
       <div class="row">
-      <form class="col s12">
-        <div class="row">
-          <div class="input-field col s12">
-            <textarea id="textarea2" 
-            class="materialize-textarea" 
-            data-length="120"
-            onChange={e => setDescription(e.target.value)}
-            >
-            </textarea>
-            <label for="textarea2">Description</label>
-          </div>
-        </div>
-      </form>
+      <Form onChange={e => setBetDescription(e.target.value)}>
+        <Form.Group controlId="exampleForm.ControlTextarea1">
+          <Form.Label>Description</Form.Label>
+          <Form.Control as="textarea" rows="5" />
+        </Form.Group>
+      </Form>
       </div>
 
       
@@ -211,18 +210,53 @@ export default function Ticket() {
             placeholder="Amount to Risk"
             aria-label="Input group example"
             aria-describedby="btnGroupAddon"
-            onChange={e => setAmountRisk(e.target.value)}
+            onChange={e => setAmountAtRisk(e.target.value)}
           />
         </InputGroup>   
       </div>     
 
 
-
-      <Button variant="primary" onClick={handleShow}>
-        Launch static backdrop modal
+      {/* const ticket = [how, betUser, type, line, odds, betDate, description, amountRisk] */}
+      <Button variant="primary" 
+              onClick={
+                e => {
+                  e.preventDefault();
+                  if (ticket.length === 8){
+                    const sendBet = async () => {
+                      const data = {
+                        auth_token: auth_token,
+                        priv: priv,
+                        betUser: betUser,
+                        typeOfBet: typeOfBet,
+                        line: line,
+                        odds: odds,
+                        betDate: betDate,
+                        betDescription: betDescription,
+                        amountAtRisk: amountAtRisk,
+                        amountWin: amountWin
+                      }
+                      const configs= {
+                        method: "POST",
+                        headers: {'Content-Type': 'application/json'},
+                        mode: "cors",
+                        body: JSON.stringify(data)
+                        }
+                      const response = await fetch("http://localhost:5000/add_pending_bet", configs);
+                      const output = await response.json();
+                      console.log(output)
+                    }
+                    sendBet()
+                  }else{
+                    const outPutDiv = document.getElementById("output1");
+                    outPutDiv.innerHTML = "*One or more fields are missing.";
+                  }
+                }
+              }
+      >
+        Submit
       </Button>
-
-      <Modal
+      <div id='output1'></div>
+      {/* <Modal
         show={show}
         onHide={handleClose}
         backdrop="static"
@@ -241,7 +275,7 @@ export default function Ticket() {
           </Button>
           <Button variant="primary">Understood</Button>
         </Modal.Footer>
-      </Modal>
+      </Modal> */}
 
 
 

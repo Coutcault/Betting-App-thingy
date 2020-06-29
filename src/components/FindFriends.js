@@ -67,6 +67,7 @@ export default function CustomizedInputBase() {
                      const output = await response.json();
                      if (output === false){
                        console.log(false)
+                       setRealUser(false)
                        const outPutDiv = document.getElementById("ourOutput");
                          outPutDiv.innerHTML = `<p>* User '${username}' does not exist. </p>`;
                      }else if (output){
@@ -76,6 +77,8 @@ export default function CustomizedInputBase() {
                        const outPutDiv = document.getElementById("ourOutput");
                          outPutDiv.innerHTML = `<p>Username: ${output[0][3]}</p>
                                                 <p>Record: ${output[0][7]}</p>`;
+                      //  const outPutDiv2 = document.getElementById("ourOutput2");
+                      //    outPutDiv2.innerHTML = <p>   </p>
                      }
                    }
                    getData();
@@ -89,6 +92,7 @@ export default function CustomizedInputBase() {
     </Paper>
     <div id='ourOutput'></div>
     {/* <div id='output2'></div> */}
+    {realUser ?
       <Button
         variant="contained"
         color="default"
@@ -111,7 +115,10 @@ export default function CustomizedInputBase() {
                     }
                     const response = await fetch("http://localhost:5000/add_friend", configs);
                     const output = await response.json();
-                    if (output) {
+                    if (output['FAILURE'] === "CANNOT ADD YOURSELF AS FRIEND"){
+                      const outPutDiv = document.getElementById("ourOutput2");
+                      outPutDiv.innerHTML = "*Unable to add yourself as a friend.";
+                    }else if (output) {
                       console.log(output)
                       const outPutDiv = document.getElementById("ourOutput2");
                       outPutDiv.innerHTML = "Friend successfully added!";
@@ -130,7 +137,7 @@ export default function CustomizedInputBase() {
           
         >
           Add Friend
-      </Button>
+      </Button> : ""}
     <br></br><br></br>
     <div id='ourOutput2'></div>
     </div>

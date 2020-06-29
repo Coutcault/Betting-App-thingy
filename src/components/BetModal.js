@@ -10,6 +10,7 @@ export default function BetReview() {
             const instances = M.Modal.init(elems, {});
         });
     }
+    
     return(
         <div>
             <a class="waves-effect waves-light btn modal-trigger" href="#modal1">Submit Ticket</a>

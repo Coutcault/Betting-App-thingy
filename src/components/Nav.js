@@ -9,6 +9,8 @@ import FindFriends from './FindFriends'
 import MakeBet from './MakeBet'
 import History from './History'
 import Profile from './Profile'
+import PendingBets from './PendingBets'
+import ActiveBets from './ActiveBets'
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -97,9 +99,11 @@ export default function VerticalTabs() {
       </TabPanel>
       <TabPanel value={value} index={3}>
         Pending Bets
+        <PendingBets />
       </TabPanel>
       <TabPanel default={true} value={value} index={4}>
         Active Bets
+        <ActiveBets />
       </TabPanel>
       <TabPanel value={value} index={5}>
         History <br></br><br></br><br></br>
