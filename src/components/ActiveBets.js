@@ -33,6 +33,8 @@ const useStyles = makeStyles((theme) => ({
 
 export default function PendingBets(){
     const classes = useStyles();
+    const [venUsername, setVenUsername] = useState("")
+    const [venPassword, setVenPassword] = useState("")
     const [activeBets, setActiveBets] = useState([])
     const [activeOppBets, setActiveOppBets] = useState([])
     const [winner, setWinner] = useState("")
@@ -112,16 +114,20 @@ export default function PendingBets(){
                             </div><br></br>
                             <div class="betinfo">
                             <li>
-                            <Button onClick={
-                                        e => {
-                                            // e.preventDefault();
-                                                if (winner === ""){
-                                                    const outPutDiv = document.getElementById("outputarea");
-                                                    outPutDiv.innerHTML = "*Please select a winner.";
-                                                }}
-                                                }>Pay with Venmo</Button>
+                            <Button>Pay with Venmo</Button>
                             <div>
-                                <Button href="#modal1">Request with Venmo</Button>
+                            <Button
+                                onClick={
+                                    e => {
+                                        e.preventDefault();
+                                            if (winner === ""){
+                                                const outPutDiv = document.getElementById("outputarea");
+                                                outPutDiv.innerHTML = "*Please select a winner.";
+                                            }}
+                                            }
+                            
+                            
+                            >Request with Venmo</Button>
                                 {/* <div id="modal1" class="modal">
                                     <div class="modal-content">
                                         <h4>Ticket Review</h4>
@@ -160,5 +166,29 @@ export default function PendingBets(){
 
 
             </div>
+            <input onChange={e => setVenUsername()}></input>
+            <input onChange={e => setVenPassword()}></input>
+            <Button
+                onClick={
+                    e => {
+                    e.preventDefault();
+                    const venmo = async () => {
+                        const data = {
+                            venmo_username: venUsername,
+                            venmo_password: venPassword
+                        }
+                        const configs= {
+                            method: "POST",
+                            headers: {'Content-Type': 'application/json'},
+                            mode: "cors",
+                            body: JSON.stringify(data)
+                            }
+                            const response = await fetch("http://localhost:5000/request_with_venmo", configs);
+                            const output = await response.json();
+                            console.log(output)
+                    }
+                    venmo();
+                }}
+                >Request</Button>
         </div>
     )}

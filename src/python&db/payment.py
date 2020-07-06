@@ -1,8 +1,8 @@
 from venmo_api import Client
 
 # Get your access token. You will need to complete the 2FA process
-# access_token = Client.get_access_token(username='coutcault@gmail.com',
-#                                        password='[]Denny10')
+# access_token = Client.get_access_token(username='',
+#                                        password='')
 # venmo = Client(access_token=access_token)
 
 # Search for users. You get 50 results per page.

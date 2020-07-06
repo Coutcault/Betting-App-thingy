@@ -1,8 +1,7 @@
 from flask_cors import CORS
 from flask import Flask, request, jsonify
 from seed import Account, PendingBets
-
-
+import requests
 
 
 
@@ -252,8 +251,8 @@ def active_bets():
     active_bets = PendingBets.get_all_against_active_bets(friend_pk)
     return jsonify(active_bets)
 
-@app.route('/pay_with_venmo')
-def pay_with_venmo():
+@app.route('/request_with_venmo')
+def request_with_venmo():
     data = request.get_json()
     venmo_username = data.get('venmo_username')
     venmo_password = data.get('venmo_password')
@@ -265,6 +264,8 @@ def pay_with_venmo():
         "password": (f'{venmo_password}')
     }
     r = requests.get(url, header=header)
+    r_dict = r.json()
+    return r_dict
 
 if __name__=="__main__":
     app.run(debug=True)
