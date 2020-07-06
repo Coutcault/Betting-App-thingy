@@ -21,6 +21,12 @@ const useStyles = makeStyles((theme) => ({
   menuButton: {
     marginRight: theme.spacing(2),
   },
+  toolbar: {
+    minHeight: 144,
+    alignItems: 'flex-start',
+    paddingTop: theme.spacing(1),
+    paddingBottom: theme.spacing(2),
+  },
   title: {
     flexGrow: 1,
   },
@@ -37,29 +43,31 @@ export default function ButtonAppBar() {
 
 
   return (
+
     <div className={classes.root}>
       <AppBar position="static" color="default" className={classes.appBar}>
-        <Toolbar>
+        <Toolbar className={classes.toolbar}>
           <Typography variant="h6" className={classes.title}>
             Bettor Friends
           </Typography>
           <MenuItem>
-          <IconButton aria-label="show 4 new mails" color="inherit">
+          {/* <IconButton aria-label="show 4 new mails" color="inherit">
             <Badge badgeContent={4} color="secondary">
               <PersonAddIcon />
             </Badge>
-          </IconButton>
+          </IconButton> */}
           {/* <p>Messages</p> */}
           </MenuItem>
           <MenuItem>
-          <IconButton aria-label="show 11 new notifications" color="inherit">
+          {/* <IconButton aria-label="show 11 new notifications" color="inherit">
             <Badge badgeContent={11} color="secondary">
               <NotificationsIcon />
             </Badge>
-          </IconButton>
+          </IconButton> */}
           {/* <p>Notifications</p> */}
         </MenuItem>
           <Button 
+            size="large"
             color="inherit"
             onClick={
               e => {

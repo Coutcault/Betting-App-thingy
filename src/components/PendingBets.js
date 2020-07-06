@@ -91,8 +91,10 @@ export default function PendingBets(){
             //     var elems = document.querySelectorAll('.collapsible');
             //     var instances = M.Collapsible.init(elems, {});
     return(
-        <div>
-            <h6>Pending Your Approval</h6>
+        <div className='pending' >
+        <div class="pendingbet">
+            <div class='pendingapp'>
+            <h5>Pending Your Approval</h5>
             <br></br>
             
             {waitingForYourBets.map(
@@ -171,9 +173,10 @@ export default function PendingBets(){
                                 </ExpansionPanelDetails>
                     </ExpansionPanel>)
             })}
-
+            </div>
             <br></br>
-            <h6>Pending User Response</h6>
+            <div class="pendingapp">
+            <h5>Pending User Response</h5>
             <br></br>
 
             {waitingForUsersBets.map(
@@ -196,6 +199,8 @@ export default function PendingBets(){
                                 </ExpansionPanelDetails>
                     </ExpansionPanel>);
                 })}
+            </div>
+        </div>    
         </div>
     )}
 

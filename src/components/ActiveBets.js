@@ -17,6 +17,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
+import 'materialize-css/dist/css/materialize.min.css'
 
 
 const useStyles = makeStyles((theme) => ({
@@ -82,8 +83,13 @@ export default function PendingBets(){
                     const output1 = await response.json();
                     setActiveOppBets(output1)
                 }
-            getPendingAB()  
-          },[]  
+            getPendingAB();
+            const M = window.M;
+            document.addEventListener('DOMContentLoaded', function() {
+                const elems = document.querySelectorAll('.modal');
+                const instances = M.Modal.init(elems, {});
+          })
+         }, []  
         )
     console.log(activeBets)
     console.log(activeOppBets)
@@ -91,84 +97,68 @@ export default function PendingBets(){
 
     
     return(
-        <div>
+        <div className='container' >
+            <div class="activebets">
                 {activeBets.map(
                     (bet) => {
-                    return (<ul class="collection">
+                    return (
+                            <ul class="collection">
                             <li class="collection-item">{bet[10]}: {bet[9].slice(0, 15)}</li>
+                            <div class="betinfo">
                             <li>With: {bet[5]}</li>
                             <li>{bet[6]}: {bet[7]}</li>
                             <li>Risking: ${bet[11]}</li>
-                            <li>To Win: ${bet[12]}</li><br></br>
-                            <li>
-                            <FormControl variant="outlined" className={classes.formControl}>
-                            <InputLabel id="demo-simple-select-outlined-label">Winner</InputLabel>
-                                <Select
-                                labelId="demo-simple-select-outlined-label"
-                                id="demo-simple-select-outlined"
-                                value={winner}
-                                onChange={e => setWinner(e.target.value)}
-                                label="User"
-                                >
-                                <MenuItem value={bet[2]}>{bet[2]}</MenuItem>
-                                <MenuItem value={bet[2]}>{bet[5]}</MenuItem>
-                                </Select>
-                            </FormControl><div id='outputarea'></div></li>
+                            <li>To Win: ${bet[12]}</li>
+                            </div><br></br>
+                            <div class="betinfo">
                             <li>
                             <Button onClick={
                                         e => {
-                                            e.preventDefault();
+                                            // e.preventDefault();
                                                 if (winner === ""){
                                                     const outPutDiv = document.getElementById("outputarea");
                                                     outPutDiv.innerHTML = "*Please select a winner.";
                                                 }}
-                                                }>Pay</Button>
-                            <Button>Request</Button></li>
-                            {/* <select>
-                                <option value="" disabled selected>Select Winner</option>
-                                <option value="1">{bet[2]}</option>
-                                <option value="2">{bet[5]}</option>
-                                </select>
-                                <label>Select Winner</label> */}
-                            
+                                                }>Pay with Venmo</Button>
+                            <div>
+                                <Button href="#modal1">Request with Venmo</Button>
+                                {/* <div id="modal1" class="modal">
+                                    <div class="modal-content">
+                                        <h4>Ticket Review</h4>
+                                        <p>A bunch of text</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <a href="#!" class="modal-close waves-effect waves-green btn-flat">Agree</a>
+                                    </div>
+                                </div> */}
+                            </div>
+                            <Button>Pay With Other Method</Button>
+                            <Button>Request With Other Method</Button>
+                            </li>
+                            </div>
                             </ul>)})}
                             
                 {activeOppBets.map(
                     (bet) => {
                     return (<ul class="collection">
                             <li class="collection-item">{bet[10]}: {bet[9].slice(0, 15)}</li>
+                            <div class="betinfo">
                             <li>With: {bet[2]}</li>
                             <li>{bet[6]}: {bet[7]}</li>
                             <li>Risking: ${bet[3]}</li>
-                            <li>To Win: ${bet[4]}</li><br></br>
+                            <li>To Win: ${bet[4]}</li>
+                            </div><br></br>
+                            <div class="betinfo">
                             <li>
-                            <FormControl variant="outlined" className={classes.formControl}>
-                            <InputLabel id="demo-simple-select-outlined-label">Winner</InputLabel>
-                                <Select
-                                labelId="demo-simple-select-outlined-label"
-                                id="demo-simple-select-outlined"
-                                // value={betUser}
-                                // onChange={e => setBetUser(e.target.value)}
-                                label="User"
-                                >
-                                <MenuItem value={10}>{bet[2]}</MenuItem>
-                                <MenuItem value={20}>{bet[5]}</MenuItem>
-                                </Select>
-                            </FormControl></li>
-                            <li>
-                            <Button>Pay</Button>
-                            <Button>Request</Button></li>
-                            {/* <select>
-                                <option value="" disabled selected>Select Winner</option>
-                                <option value="1">{bet[2]}</option>
-                                <option value="2">{bet[5]}</option>
-                                </select>
-                                <label>Select Winner</label> */}
+                            <Button>Pay with Venmo</Button>
+                            <Button>Pay With Other Method</Button>
+                            <Button>Request With Other Method</Button>
+                            </li>
+                            </div>
                             </ul>)})}
                         
 
 
-            
+            </div>
         </div>
     )}
-

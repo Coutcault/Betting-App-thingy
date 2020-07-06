@@ -62,7 +62,7 @@ export default function Profile () {
     )
 
     return (
-        <div>
+        <div className='container'>
         {/* <form className={classes.root} noValidate autoComplete="off"> */}
         <div>
         <Form.Group>

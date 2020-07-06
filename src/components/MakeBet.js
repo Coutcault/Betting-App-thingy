@@ -25,6 +25,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Ticket() {
   const classes = useStyles();
+  const [isBet, setIsBet] = useState(false)
   const [show, setShow] = useState(false)
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -88,8 +89,10 @@ export default function Ticket() {
 
   return (
     // Public / Private
-    <div className='container' >
-      <div>
+    <div className='betdiv' >
+    <div class='betcontent' >
+      <h6>Bet Ticket</h6><br></br><br></br>
+      <div class='bet'>
         <p onChange={e => setPriv(e.target.name)}>
           <label>
             <input name="Public" type="radio" class="with-gap" disabled />
@@ -104,7 +107,7 @@ export default function Ticket() {
       </div>
       
     
-      <div>
+      <div class='bet'>
         <FormControl variant="outlined" className={classes.formControl}>
           <InputLabel id="demo-simple-select-outlined-label">User</InputLabel>
             <Select
@@ -126,7 +129,7 @@ export default function Ticket() {
       </div>
       
 
-      <div>
+      <div class='bet'>
         <FormControl variant="outlined" className={classes.formControl}>
           <InputLabel id="demo-simple-select-outlined-label">Type</InputLabel>
             <Select
@@ -146,7 +149,7 @@ export default function Ticket() {
       </div>
 
   
-      <div class="Line - switch">
+      <div class="bet">
         {/* <label onClick={e => setLineSwitch(e.target.value)}>
           <RemoveIcon />
           <input type="checkbox"/>
@@ -168,7 +171,7 @@ export default function Ticket() {
       
 
  
-      <div class="Odds - switch">
+      <div class="bet">
       {/* <label onChange={e => setOddsSwitch(e.target.name)}>
           <RemoveIcon name='-'/>
           <input type="checkbox"/>
@@ -191,7 +194,7 @@ export default function Ticket() {
       
 
     
-      <div class="row">
+      <div class="bet">
       <Form onChange={e => setBetDescription(e.target.value)}>
         <Form.Group controlId="exampleForm.ControlTextarea1">
           <Form.Label>Description</Form.Label>
@@ -202,7 +205,7 @@ export default function Ticket() {
 
       
 
-      <div>
+      <div class="bet">
         <InputGroup>
           <input
             type="number"
@@ -221,41 +224,83 @@ export default function Ticket() {
               onClick={
                 e => {
                   e.preventDefault();
-                  if (ticket.length === 8){
-                    const sendBet = async () => {
-                      const data = {
-                        auth_token: auth_token,
-                        priv: priv,
-                        betUser: betUser,
-                        typeOfBet: typeOfBet,
-                        line: line,
-                        odds: odds,
-                        betDate: betDate,
-                        betDescription: betDescription,
-                        amountAtRisk: amountAtRisk,
-                        amountWin: amountWin
-                      }
-                      const configs= {
-                        method: "POST",
-                        headers: {'Content-Type': 'application/json'},
-                        mode: "cors",
-                        body: JSON.stringify(data)
-                        }
-                      const response = await fetch("http://localhost:5000/add_pending_bet", configs);
-                      const output = await response.json();
-                      console.log(output)
-                    }
-                    sendBet()
-                  }else{
-                    const outPutDiv = document.getElementById("output1");
-                    outPutDiv.innerHTML = "*One or more fields are missing.";
-                  }
+                  setIsBet(true)
+                  // if (ticket.length === 8){
+                  // }
+                  //   const sendBet = async () => {
+                  //     const data = {
+                  //       auth_token: auth_token,
+                  //       priv: priv,
+                  //       betUser: betUser,
+                  //       typeOfBet: typeOfBet,
+                  //       line: line,
+                  //       odds: odds,
+                  //       betDate: betDate,
+                  //       betDescription: betDescription,
+                  //       amountAtRisk: amountAtRisk,
+                  //       amountWin: amountWin
+                  //     }
+                  //     const configs= {
+                  //       method: "POST",
+                  //       headers: {'Content-Type': 'application/json'},
+                  //       mode: "cors",
+                  //       body: JSON.stringify(data)
+                  //       }
+                  //     const response = await fetch("http://localhost:5000/add_pending_bet", configs);
+                  //     const output = await response.json();
+                  //     console.log(output)
+                  //   }
+                  //   sendBet()
+                  // }else{
+                  //   const outPutDiv = document.getElementById("output1");
+                  //   outPutDiv.innerHTML = "*One or more fields are missing.";
+              //     }
                 }
               }
       >
         Submit
       </Button>
-      <div id='output1'></div>
+      </div>
+      
+      {isBet ? 
+      <div class='betcontent'>
+        
+        <h6>Review</h6>
+        <div class='betcontent1'>
+          <ul>
+            <li>{betDescription}</li><br></br>
+            <li>{betDate}</li><br></br>
+            <li>{priv} Bet</li><br></br>
+            <li>{typeOfBet}</li><br></br>
+            <li>{odds}</li><br></br>
+            <li>{amountAtRisk}</li><br></br>
+            <li>{amountWin}</li><br></br>
+            <li>{betUser}</li><br></br>
+            <li>{line}</li><br></br>
+          </ul>
+          <Button variant="primary" 
+              onClick={
+                e => {
+                  e.preventDefault();
+                }}
+          >
+          Create Ticket
+          </Button><br></br><br></br>
+          <Button variant="primary" 
+              onClick={
+                e => {
+                  e.preventDefault();
+                  setIsBet(false)
+                }}
+          >
+          Cancel
+          </Button>
+        </div>
+      </div> :
+      <div class='betcontent'>
+      </div>  
+      }
+      
       {/* <Modal
         show={show}
         onHide={handleClose}
@@ -308,8 +353,6 @@ export default function Ticket() {
       >
         Submit Ticket
     </Button> */}
-
-
     </div>
   )
 

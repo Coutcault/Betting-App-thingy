@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { BrowserRouter, Route, Link, Redirect } from 'react-router-dom';
-import HomePage from './components/HomePage'
+import Nav from './components/Nav'
 import Login from './components/Login'
-import Register from './components/Register'
+import SignUp from './components/Signup';
+import Confirm from './components/Confirm';
+import MakeBet from './components/MakeBet';
 
 
 function App() {
@@ -12,8 +14,10 @@ function App() {
     <BrowserRouter>
       <Route exact path="/login" component={Login} />
       {/* <Redirect from='/' to='/Login' /> */}
-      <Route exact path="/home" component={HomePage} />
-      <Route exact path="/signup" component={Register} />
+      <Route exact path="/home" component={Nav} />
+      <Route exact path="/signup" component={SignUp} />
+      <Route exact path="/new" component={Confirm} />
+      {/* <Route exact path="/make_bet" component={MakeBet} /> */}
     </BrowserRouter>
     </div>
   );
