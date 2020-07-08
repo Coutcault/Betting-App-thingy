@@ -108,6 +108,17 @@
   justify-content:flex-start;
   /* align-items: flex-start; */
 }
+/* .active {
+    background-color: darkgrey;
+    height: 80vh;
+    width: 65vw;
+    display: flex;
+    justify-content: flex-start;
+    margin-left: 18%;
+    align-items:stretch;
+    margin-top: 2%;
+    flex-direction: row;
+} */
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',

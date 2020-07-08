@@ -2,6 +2,7 @@ from flask_cors import CORS
 from flask import Flask, request, jsonify
 from seed import Account, PendingBets
 import requests
+from Venmo.venmo_api import Client
 
 
 
@@ -80,7 +81,7 @@ def logout():
 def find_user():
     info = request.get_json()
     username = info.get('username')
-    valid = Account.search(username)
+    valid = Account.get_friend_pk(username)
     if valid:
         return jsonify(valid)
     else:
@@ -251,21 +252,97 @@ def active_bets():
     active_bets = PendingBets.get_all_against_active_bets(friend_pk)
     return jsonify(active_bets)
 
-@app.route('/request_with_venmo')
+@app.route('/request_user', methods=["POST"])
 def request_with_venmo():
-    data = request.get_json()
-    venmo_username = data.get('venmo_username')
-    venmo_password = data.get('venmo_password')
+    data =  request.get_json()
     auth_token = data.get('auth_token')
     user_pk = Account.get_user_pk(auth_token)[0][0]
-    url = 'https://api.venmo.com/oauth/access_token'
-    header = {
-        "phone_email_or_username": (f'{venmo_username}'),
-        "password": (f'{venmo_password}')
-    }
-    r = requests.get(url, header=header)
-    r_dict = r.json()
-    return r_dict
+    # device_id = Account.get_device_id(user_pk)
+    username = data.get('username')
+    description = data.get('description')
+    amount = data.get('amount')
+    venmo_username = data.get('venmo_username')
+    venmo_password = data.get('venmo_password')
+    venmo_user_id = Account.get_venmo_user_id(username)[0]
+    access_token = Client.get_access_token(username=f'{venmo_username}',
+                                       password=f'{venmo_password}',
+                                       device_id= '38031725-09B0-7V97-67V8-8QQ82U354RN3'
+                                       )
+    venmo = Client(access_token=access_token)
+    venmo.payment.request_money(int(amount), f"{description}", f"{venmo_user_id}")
+    venmo.log_out(f"{access_token}")
+    return jsonify(True)
+
+@app.route('/pay_user', methods=["POST"])
+def pay_with_venmo():
+    data =  request.get_json()
+    auth_token = data.get('auth_token')
+    user_pk = Account.get_user_pk(auth_token)[0][0]
+    # device_id = Account.get_device_id(user_pk)
+    username = data.get('username')
+    description = data.get('description')
+    amount = data.get('amount')
+    venmo_username = data.get('venmo_username')
+    venmo_password = data.get('venmo_password')
+    venmo_user_id = Account.get_venmo_user_id(username)[0]
+    access_token = Client.get_access_token(username=f'{venmo_username}',
+                                       password=f'{venmo_password}',
+                                       device_id= '38031725-09B0-7V97-67V8-8QQ82U354RN3'
+                                       )
+    venmo = Client(access_token=access_token)
+    venmo.payment.send_money(int(amount), f"{description}", f"{venmo_user_id}")
+    venmo.log_out(f"{access_token}")
+    return jsonify(True)
+    # venmo_username = data.get('venmo_username')
+    # venmo_password = data.get('venmo_password')
+    # auth_token = data.get('auth_token')
+    # user_pk = Account.get_user_pk(auth_token)[0][0]
+
+@app.route('/end_bet', methods=["POST"])
+def end_bet():
+    data =  request.get_json()
+    bet_pk = data.get('bet_pk')
+    priv = data.get("priv")
+    betCreator = data.get("betCreator")
+    amountUserAtRisk = data.get("amountUserAtRisk")
+    amountUserWin = data.get("amountUserWin")
+    betUser = data.get("betUser")
+    typeOfBet = data.get("typeOfBet")
+    line = data.get("line")
+    odds = data.get("odds")
+    betDate = data.get("betDate")
+    betDescription = data.get("betDescription")
+    amountAtRisk = data.get("amountAtRisk")
+    amountWin = data.get("amountWin")
+    result = data.get('result')
+    friend_pk = data.get("friend_pk")
+    user_pk = data.get("user_pk")
+    # if result == 'Payed':
+    past_bet = PendingBets(priv=priv, betCreator=betCreator, amountUserAtRisk=amountUserAtRisk,
+                amountUserWin=amountUserWin, betUser=betUser, typeOfBet=typeOfBet, line=line, odds=odds,
+                betDate=betDate, betDescription=betDescription, amountAtRisk=amountAtRisk, amountWin=amountWin,
+                result=result, friend_pk=friend_pk, user_pk=user_pk)
+    past_bet.add_past_bet()
+    delete = PendingBets.delete_active_bet(bet_pk)
+    if delete:
+        return jsonify({"Success":"Bet Ended"})
+
+@app.route('/get_all_past_bets', methods=['POST'])
+def past_bets():
+    data = request.get_json()
+    auth_token = data.get('auth_token')
+    user_pk = Account.get_user_pk(auth_token)[0][0]
+    past_bets = PendingBets.get_history(user_pk)
+    return jsonify(past_bets)
+
+@app.route('/get_all_previous_bets', methods=['POST'])
+def previous_bets():
+    data = request.get_json()
+    auth_token = data.get('auth_token')
+    friend_pk = Account.get_user_pk(auth_token)[0][0]
+    previous_bets = PendingBets.get_past(friend_pk)
+    return jsonify(previous_bets)
+
 
 if __name__=="__main__":
     app.run(debug=True)

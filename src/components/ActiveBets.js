@@ -39,6 +39,7 @@ export default function PendingBets(){
     const [activeOppBets, setActiveOppBets] = useState([])
     const [winner, setWinner] = useState("")
     const [incompleted, setInompleted] = useState(true)
+    const [confirmed, setConfirmed] = useState(true)
 
     // const handleClickOpen = () => {
     //   setOpen(true);
@@ -114,32 +115,105 @@ export default function PendingBets(){
                             </div><br></br>
                             <div class="betinfo">
                             <li>
-                            <Button>Pay with Venmo</Button>
+                            {confirmed ?
                             <div>
                             <Button
                                 onClick={
                                     e => {
                                         e.preventDefault();
-                                            if (winner === ""){
-                                                const outPutDiv = document.getElementById("outputarea");
-                                                outPutDiv.innerHTML = "*Please select a winner.";
-                                            }}
+                                        setConfirmed(false)
+                                    }
+                                }>Pay with Venmo</Button>
+                            <Button
+                                onClick={
+                                    e => {
+                                        e.preventDefault();
+                                        setConfirmed(false)
+                                    }
+                            }>Request with Venmo</Button>
+                            <Button
+                                onClick={
+                                    e => {
+                                        e.preventDefault();
+                                        const endBet = async () => {
+                                            const data = {
+                                                auth_token: auth_token,
+                                                bet_pk: bet[0],
+                                                priv: bet[1],
+                                                betCreator: bet[2],
+                                                amountUserAtRisk: bet[3],
+                                                amountUserWin: bet[4],
+                                                betUser: bet[5],
+                                                typeOfBet: bet[6],
+                                                line: bet[7],
+                                                odds: bet[8],
+                                                betDate: bet[9],
+                                                betDescription: bet[10],
+                                                amountAtRisk: bet[11],
+                                                amountWin: bet[12],
+                                                friend_pk: bet[13],
+                                                user_pk: bet[14],
+                                                result: 'Payed'
                                             }
-                            
-                            
-                            >Request with Venmo</Button>
-                                {/* <div id="modal1" class="modal">
-                                    <div class="modal-content">
-                                        <h4>Ticket Review</h4>
-                                        <p>A bunch of text</p>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <a href="#!" class="modal-close waves-effect waves-green btn-flat">Agree</a>
-                                    </div>
-                                </div> */}
+                                            const configs= {
+                                                method: "POST",
+                                                headers: {'Content-Type': 'application/json'},
+                                                mode: "cors",
+                                                body: JSON.stringify(data)
+                                            }
+                                            const response = await fetch("http://localhost:5000/end_bet", configs);
+                                            const output = await response.json();
+                                            if (output === true) {
+                                                setConfirmed(false)
+                                            }
+                                            console.log(output)
+                                        }; endBet();
+                                    } 
+                                }  
+                                >Pay With Other Method</Button>
+                            <Button
+                                onClick={
+                                    e => {
+                                        e.preventDefault();
+                                        const endBet = async () => {
+                                            const data = {
+                                                auth_token: auth_token,
+                                                bet_pk: bet[0],
+                                                priv: bet[1],
+                                                betCreator: bet[2],
+                                                amountUserAtRisk: bet[3],
+                                                amountUserWin: bet[4],
+                                                betUser: bet[5],
+                                                typeOfBet: bet[6],
+                                                line: bet[7],
+                                                odds: bet[8],
+                                                betDate: bet[9],
+                                                betDescription: bet[10],
+                                                amountAtRisk: bet[11],
+                                                amountWin: bet[12],
+                                                friend_pk: bet[13],
+                                                user_pk: bet[14],
+                                                result: 'Requested'
+                                            }
+                                            const configs= {
+                                                method: "POST",
+                                                headers: {'Content-Type': 'application/json'},
+                                                mode: "cors",
+                                                body: JSON.stringify(data)
+                                            }
+                                            const response = await fetch("http://localhost:5000/end_bet", configs);
+                                            const output = await response.json();
+                                            if (output === true) {
+                                                setConfirmed(false)
+                                            }
+                                            console.log(output)
+                                        }; endBet();
+                                    } 
+                                }  
+                                >Request With Other Method</Button> 
                             </div>
-                            <Button>Pay With Other Method</Button>
-                            <Button>Request With Other Method</Button>
+                            :
+                            <p>Bet Completed.</p>}
                             </li>
                             </div>
                             </ul>)})}
@@ -156,9 +230,147 @@ export default function PendingBets(){
                             </div><br></br>
                             <div class="betinfo">
                             <li>
-                            <Button>Pay with Venmo</Button>
-                            <Button>Pay With Other Method</Button>
-                            <Button>Request With Other Method</Button>
+                            {confirmed ?
+                            <div>
+                            <Button
+                                onClick={
+                                    e => {
+                                        e.preventDefault();
+                                        const pay = async () => {
+                                            const data = {
+                                                username: bet[2],
+                                                description: bet[10],
+                                                amount: bet[4],
+                                                auth_token: auth_token,
+                                                result: 'Payed'
+                                            }
+                                            const configs= {
+                                                method: "POST",
+                                                headers: {'Content-Type': 'application/json'},
+                                                mode: "cors",
+                                                body: JSON.stringify(data)
+                                            }
+                                            const response = await fetch("http://localhost:5000/pay_user", configs);
+                                            const output = await response.json();
+                                            if (output === true) {
+                                                setConfirmed(false)
+                                            }
+                                            console.log(output)
+                                        }; pay();
+                                    } 
+                                }  
+                            >Pay with Venmo</Button>
+                            <Button
+                                onClick={
+                                    e => {
+                                        e.preventDefault();
+                                        const request = async () => {
+                                            const data = {
+                                                username: bet[2],
+                                                description: bet[10],
+                                                amount: bet[4],
+                                                auth_token: auth_token,
+                                                result: 'Requested'
+                                            }
+                                            const configs= {
+                                                method: "POST",
+                                                headers: {'Content-Type': 'application/json'},
+                                                mode: "cors",
+                                                body: JSON.stringify(data)
+                                            }
+                                            const response = await fetch("http://localhost:5000/request_user", configs);
+                                            const output = await response.json();
+                                            if (output === true) {
+                                                setConfirmed(false)
+                                            }
+                                            console.log(output)
+                                        }; request();
+                                    } 
+                                }  
+                            >Request with Venmo</Button>
+                            <Button
+                                onClick={
+                                    e => {
+                                        e.preventDefault();
+                                        const endBet = async () => {
+                                            const data = {
+                                                auth_token: auth_token,
+                                                bet_pk: bet[0],
+                                                priv: bet[1],
+                                                betCreator: bet[2],
+                                                amountUserAtRisk: bet[3],
+                                                amountUserWin: bet[4],
+                                                betUser: bet[5],
+                                                typeOfBet: bet[6],
+                                                line: bet[7],
+                                                odds: bet[8],
+                                                betDate: bet[9],
+                                                betDescription: bet[10],
+                                                amountAtRisk: bet[11],
+                                                amountWin: bet[12],
+                                                friend_pk: bet[13],
+                                                user_pk: bet[14],
+                                                result: 'Payed'
+                                            }
+                                            const configs= {
+                                                method: "POST",
+                                                headers: {'Content-Type': 'application/json'},
+                                                mode: "cors",
+                                                body: JSON.stringify(data)
+                                            }
+                                            const response = await fetch("http://localhost:5000/end_bet", configs);
+                                            const output = await response.json();
+                                            if (output === true) {
+                                                setConfirmed(false)
+                                            }
+                                            console.log(output)
+                                        }; endBet();
+                                    } 
+                                }  
+                            >Pay With Other Method</Button>
+                            <Button
+                                onClick={
+                                    e => {
+                                        e.preventDefault();
+                                        const endBet = async () => {
+                                            const data = {
+                                                auth_token: auth_token,
+                                                bet_pk: bet[0],
+                                                priv: bet[1],
+                                                betCreator: bet[2],
+                                                amountUserAtRisk: bet[3],
+                                                amountUserWin: bet[4],
+                                                betUser: bet[5],
+                                                typeOfBet: bet[6],
+                                                line: bet[7],
+                                                odds: bet[8],
+                                                betDate: bet[9],
+                                                betDescription: bet[10],
+                                                amountAtRisk: bet[11],
+                                                amountWin: bet[12],
+                                                friend_pk: bet[13],
+                                                user_pk: bet[14],
+                                                result: 'Requested'
+                                            }
+                                            const configs= {
+                                                method: "POST",
+                                                headers: {'Content-Type': 'application/json'},
+                                                mode: "cors",
+                                                body: JSON.stringify(data)
+                                            }
+                                            const response = await fetch("http://localhost:5000/end_bet", configs);
+                                            const output = await response.json();
+                                            if (output === true) {
+                                                setConfirmed(false)
+                                            }
+                                            console.log(output)
+                                        }; endBet();
+                                    } 
+                                }  
+                            >Request With Other Method</Button>
+                            </div>
+                            :
+                            <p>Bet Completed.</p>}
                             </li>
                             </div>
                             </ul>)})}
@@ -166,7 +378,7 @@ export default function PendingBets(){
 
 
             </div>
-            <input onChange={e => setVenUsername()}></input>
+            {/* <input onChange={e => setVenUsername()}></input>
             <input onChange={e => setVenPassword()}></input>
             <Button
                 onClick={
@@ -189,6 +401,6 @@ export default function PendingBets(){
                     }
                     venmo();
                 }}
-                >Request</Button>
+                >Request</Button> */}
         </div>
     )}

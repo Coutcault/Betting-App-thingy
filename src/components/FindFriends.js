@@ -76,7 +76,7 @@ export default function CustomizedInputBase() {
       <InputBase
         className={classes.input}
         placeholder="Enter Username"
-        onChange={e => setUsername(e.target.value)}
+        onChange={e => setUsername()}
       />
       <IconButton type="submit" className={classes.iconButton} aria-label="search"
          onClick={

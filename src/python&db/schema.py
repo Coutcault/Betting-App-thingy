@@ -78,7 +78,7 @@ def schema():
 
         # cur.execute(sql)
 
-         # sql = """CREATE TABLE previous_bets(
+        # sql = """CREATE TABLE previous_bets(
         #     pk INTEGER PRIMARY KEY AUTOINCREMENT,
         #     priv VARCHAR,
         #     betCreator VARCHAR,
@@ -92,6 +92,7 @@ def schema():
         #     betDescription VARCHAR,
         #     amountAtRisk VARCHAR,
         #     amountWin VARCHAR,
+        #     result VARCHAR,
         #     friend_pk INTEGER,
         #     user_pk INTEGER,
         #     FOREIGN KEY(friend_pk) REFERENCES user(pk)

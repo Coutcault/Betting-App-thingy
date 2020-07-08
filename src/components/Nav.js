@@ -126,7 +126,7 @@ export default function VerticalTabs() {
         <li><Link to="/make_bet">Make a Bet</Link></li>
         <li><Link to="/pending_bets">Pending Bets</Link></li>
         <li><Link to="/active_bets">Active Bets</Link></li>
-        <li><a class="waves-effect" >History</a></li>
+        <li><Link to="/history">History</Link></li>
         <li><Link to="/find_a_friend">Find a Friend</Link></li>
         <li><Link to="/profile">Profile</Link></li>
       </ul>
@@ -135,6 +135,7 @@ export default function VerticalTabs() {
       <Route path="/active_bets" component={ActiveBets} />
       <Route path="/find_a_friend" component={FindFriends} />
       <Route path="/profile" component={Profile} />
+      <Route path="/history" component={History} />
       <a href="#" data-target="slide-out" class="sidenav-trigger show-on-large"><i class="material-icons">menu</i></a>
     </div>
     </BrowserRouter>

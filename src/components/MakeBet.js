@@ -25,6 +25,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Ticket() {
   const classes = useStyles();
+  const [created, setCreated] = useState(true)
   const [isBet, setIsBet] = useState(false)
   const [show, setShow] = useState(false)
   const handleClose = () => setShow(false);
@@ -225,32 +226,10 @@ export default function Ticket() {
                 e => {
                   e.preventDefault();
                   setIsBet(true)
+                  setCreated(true)
                   // if (ticket.length === 8){
                   // }
-                  //   const sendBet = async () => {
-                  //     const data = {
-                  //       auth_token: auth_token,
-                  //       priv: priv,
-                  //       betUser: betUser,
-                  //       typeOfBet: typeOfBet,
-                  //       line: line,
-                  //       odds: odds,
-                  //       betDate: betDate,
-                  //       betDescription: betDescription,
-                  //       amountAtRisk: amountAtRisk,
-                  //       amountWin: amountWin
-                  //     }
-                  //     const configs= {
-                  //       method: "POST",
-                  //       headers: {'Content-Type': 'application/json'},
-                  //       mode: "cors",
-                  //       body: JSON.stringify(data)
-                  //       }
-                  //     const response = await fetch("http://localhost:5000/add_pending_bet", configs);
-                  //     const output = await response.json();
-                  //     console.log(output)
-                  //   }
-                  //   sendBet()
+                    
                   // }else{
                   //   const outPutDiv = document.getElementById("output1");
                   //   outPutDiv.innerHTML = "*One or more fields are missing.";
@@ -268,24 +247,53 @@ export default function Ticket() {
         <h6>Review</h6>
         <div class='betcontent1'>
           <ul>
-            <li>{betDescription}</li><br></br>
-            <li>{betDate}</li><br></br>
-            <li>{priv} Bet</li><br></br>
-            <li>{typeOfBet}</li><br></br>
-            <li>{odds}</li><br></br>
-            <li>{amountAtRisk}</li><br></br>
-            <li>{amountWin}</li><br></br>
-            <li>{betUser}</li><br></br>
-            <li>{line}</li><br></br>
-          </ul>
+            <li>Date: {betDate.slice(0, 15)}</li><br></br>
+            <li>Description: {betDescription}</li><br></br>           
+            <li>{priv} Bet: Against {betUser}</li><br></br>
+            <li>Type: {typeOfBet}</li><br></br>
+            <li>Line: {line}</li><br></br>
+            <li>Odds: {odds}</li><br></br><br></br><br></br>
+            <li>Risking: ${amountAtRisk}</li><br></br>
+            <li>To Win: ${amountWin}</li><br></br>
+            
+          
+          <li>
+          {created ?
+          <div>
           <Button variant="primary" 
               onClick={
                 e => {
                   e.preventDefault();
+                  setCreated(false)
+                  const sendBet = async () => {
+                    const data = {
+                      auth_token: auth_token,
+                      priv: priv,
+                      betUser: betUser,
+                      typeOfBet: typeOfBet,
+                      line: line,
+                      odds: odds,
+                      betDate: betDate,
+                      betDescription: betDescription,
+                      amountAtRisk: amountAtRisk,
+                      amountWin: amountWin
+                    }
+                    const configs= {
+                      method: "POST",
+                      headers: {'Content-Type': 'application/json'},
+                      mode: "cors",
+                      body: JSON.stringify(data)
+                      }
+                    const response = await fetch("http://localhost:5000/add_pending_bet", configs);
+                    const output = await response.json();
+                    console.log(output)
+                  }
+                  sendBet()
                 }}
           >
           Create Ticket
-          </Button><br></br><br></br>
+          </Button>
+          <br></br><br></br>
           <Button variant="primary" 
               onClick={
                 e => {
@@ -295,6 +303,12 @@ export default function Ticket() {
           >
           Cancel
           </Button>
+          </div>
+          :
+          <p>Bet Created!</p>
+          }
+          </li>
+          </ul>
         </div>
       </div> :
       <div class='betcontent'>

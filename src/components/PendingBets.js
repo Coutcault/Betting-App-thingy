@@ -176,7 +176,7 @@ export default function PendingBets(){
             </div>
             <br></br>
             <div class="pendingapp">
-            <h5>Pending User Response</h5>
+            <h5>Pending Friend's Approval</h5>
             <br></br>
 
             {waitingForUsersBets.map(

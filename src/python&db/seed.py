@@ -22,6 +22,7 @@ class Account:
         self.record = kwargs.get("record", "0 - 0")
         self.friend_pk = kwargs.get("friend_pk")
         self.user_pk = kwargs.get("user_pk")
+        self.venUserID = kwargs.get("venUserID")
 
     @classmethod
     def login(cls, username, password):
@@ -49,7 +50,14 @@ class Account:
             cursor.execute(sql, (pk, ))
             return True
             
-                
+    @classmethod
+    def get_venmo_user_id(cls, username):
+        with sqlite3.connect(db) as conn:
+            cursor = conn.cursor()
+            sql = """SELECT venUserID FROM user WHERE username=?"""
+            cursor.execute(sql, (username, ))
+            result = cursor.fetchone()
+            return result   
 
 
     def update(self):
@@ -148,6 +156,9 @@ class Account:
             cursor.execute(sql, (user_pk, ))
             result = cursor.fetchall()
             return result
+    
+  
+
 
 
 class PendingBets:
@@ -166,6 +177,7 @@ class PendingBets:
         self.betDescription = kwargs.get("betDescription")
         self.amountAtRisk = kwargs.get("amountAtRisk")
         self.amountWin = kwargs.get("amountWin")
+        self.result = kwargs.get('result')
         self.friend_pk = kwargs.get("friend_pk")
         self.user_pk = kwargs.get("user_pk")
         
@@ -185,7 +197,7 @@ class PendingBets:
             cursor.execute(sql, (values))
 
     @classmethod
-    def delete_pending_bet(self, pk):
+    def delete_pending_bet(cls, pk):
         with sqlite3.connect(db) as conn:
             cursor = conn.cursor()
             sql = """DELETE FROM pending_bets WHERE
@@ -253,7 +265,53 @@ class PendingBets:
             cursor.execute(sql, (friend_pk, ))
             result = cursor.fetchall()
             return result
-    
+
+
+    def add_past_bet(self):
+        with sqlite3.connect(db) as conn:
+            cursor = conn.cursor()
+            sql = """INSERT INTO previous_bets 
+                    (priv, betCreator, amountUserAtRisk, amountUserWin, betUser, 
+                    typeOfBet, line, odds, betDate, betDescription, 
+                    amountAtRisk, amountWin, result, friend_pk, user_pk) 
+                    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);"""
+            values = (self.priv, self.betCreator, self.amountUserAtRisk, self.amountUserWin, 
+                    self.betUser, self.typeOfBet, self.line, self.odds, 
+                    self.betDate, self.betDescription, self.amountAtRisk, self.amountWin,                    
+                    self.result, self.friend_pk, self.user_pk,)
+            cursor.execute(sql, (values))
+
+    @classmethod
+    def delete_active_bet(cls, pk):
+        with sqlite3.connect(db) as conn:
+            cursor = conn.cursor()
+            sql = """DELETE FROM active_bets WHERE
+                    pk=?;"""
+            cursor.execute(sql, (pk, ))
+            return True
+
+    @classmethod
+    def get_history(cls, pk):
+        with sqlite3.connect(db) as conn:
+            cursor = conn.cursor()
+            sql = """SELECT * FROM previous_bets 
+                    JOIN user ON user.pk = previous_bets.user_pk
+                    WHERE user_pk=?"""
+            cursor.execute(sql, (pk, ))
+            result = cursor.fetchall()
+            return result
+
+    @classmethod
+    def get_past(cls, pk):
+        with sqlite3.connect(db) as conn:
+            cursor = conn.cursor()
+            sql = """SELECT * FROM previous_bets 
+                    JOIN user ON user.pk = previous_bets.friend_pk
+                    WHERE friend_pk=?"""
+            cursor.execute(sql, (pk, ))
+            result = cursor.fetchall()
+            return result
+
     # def update_pending_bet(self):
     #     with sqlite3.connect(db) as conn:
     #         cursor = conn.cursor()

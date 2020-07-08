@@ -183,7 +183,7 @@ export default function SignUp() {
                         const output = await response.json();
                         if (output.success === true){
                             console.log(true, output)
-                            history.push('/new').catch(err => console.log(err))
+                            history.push('/new')
                         } else {
                             const outPutDiv = document.getElementById("ourOutput2");
                             outPutDiv.innerHTML = "<p>An error occured please try again.</p>";
@@ -194,7 +194,7 @@ export default function SignUp() {
                 }  
             }     
           >
-            Sign Up
+            Next
           </Button>
           <Grid container justify="flex-end">
             <Grid item>
